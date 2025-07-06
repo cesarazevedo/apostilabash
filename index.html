@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apostila Definitiva de Bash</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        html {
+            scroll-behavior: smooth;
+        }
+        .container {
+            max-width: 900px;
+            margin: 2rem auto;
+            padding: 1rem 2rem;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        nav {
+            background-color: #f8f9fa;
+            padding: 1.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 2.5rem;
+        }
+        nav h3 {
+            margin-top: 0;
+            border-bottom: 2px solid #3498db;
+        }
+        nav ul {
+            list-style-type: none;
+            padding: 0;
+            columns: 2;
+            -webkit-columns: 2;
+            -moz-columns: 2;
+        }
+        nav li a {
+            text-decoration: none;
+            color: #2980b9;
+            font-weight: 500;
+            display: block;
+            padding: 4px 0;
+        }
+        nav li a:hover {
+            text-decoration: underline;
+        }
+        h1, h2, h3, h4 {
+            color: #2c3e50;
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 10px;
+            margin-top: 2.5rem;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+        }
+        code {
+            background-color: #e8e8e8;
+            padding: 0.2em 0.4em;
+            margin: 0;
+            font-size: 0.9em;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        pre {
+            background-color: #2d2d2d;
+            color: #f1f1f1;
+            padding: 1rem;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.95em;
+            font-family: 'Courier New', Courier, monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+        pre code {
+            background-color: transparent;
+            padding: 0;
+            margin: 0;
+            font-size: inherit;
+            color: inherit;
+            border-radius: 0;
+        }
+        .explanation {
+            background-color: #e7f3fe;
+            border-left: 5px solid #3498db;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 5px;
+        }
+        .quiz {
+            margin-top: 2.5rem;
+            padding: 1.5rem;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+        }
+        .chapter {
+            margin-bottom: 3rem;
+            padding-bottom: 2rem;
+            border-bottom: 2px solid #ccc;
+        }
+        .question p {
+            font-weight: bold;
+        }
+        .question ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .question li {
+            margin-bottom: 0.5rem;
+        }
+        .correct-answer {
+            display: none;
+            background-color: #d4edda;
+            color: #155724;
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+        }
+        .back-to-top a {
+            text-decoration: none;
+            color: #3498db;
+            font-weight: bold;
+        }
+        .back-to-top {
+            text-align: right;
+            margin-top: 2rem;
+        }
+        button {
+            padding: 8px 15px;
+            border: none;
+            background-color: #3498db;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+    </style>
+    <script>
+        function revealAnswer(button) {
+            const questionDiv = button.closest('.question');
+            const correctAnswerDiv = questionDiv.querySelector('.correct-answer');
+            correctAnswerDiv.style.display = 'block';
+            button.textContent = 'Resposta';
+            button.disabled = true;
+        }
+    </script>
+</head>
+<body>
+
+<div class="container">
+    <h1>Apostila Definitiva de Bash</h1>
+
+    <nav id="indice">
+        <h3>Índice</h3>
+        <ul>
+            <li><a href="#ch1">Cap. 1: Introdução ao Shell</a></li>
+            <li><a href="#ch2">Cap. 2: Dicionário do Shell</a></li>
+            <li><a href="#ch3">Cap. 3: Sintaxe e Comandos</a></li>
+            <li><a href="#ch4">Cap. 4: Variáveis e Parâmetros</a></li>
+            <li><a href="#ch5">Cap. 5: Expansões do Shell</a></li>
+            <li><a href="#ch6">Cap. 6: Redirecionamento</a></li>
+            <li><a href="#ch7">Cap. 7: Scripts e Funções</a></li>
+            <li><a href="#ch8">Cap. 8: A Pilha de Diretórios</a></li>
+            <li><a href="#ch9">Cap. 9: Arrays (Listas)</a></li>
+            <li><a href="#ch10">Cap. 10: Atalhos e Edição</a></li>
+            <li><a href="#ch11">Cap. 11: Gerenciando Processos</a></li>
+            <li><a href="#ch12">Cap. 12: Autocompletar Programável</a></li>
+            <li><a href="#ch13">Cap. 13: Outros Recursos</a></li>
+        </ul>
+    </nav>
+
+    <div class="chapter" id="ch1">
+        <h2>Capítulo 1: Introdução ao Shell</h2>
+        <h3>1.1 O que é Bash?</h3>
+        <p>Pense no Bash como o tradutor principal entre você e o sistema operacional GNU/Linux. Ele é um <strong>shell</strong>, um programa que interpreta seus comandos e diz ao computador o que fazer.</p>
+        <p>O nome "Bash" é uma sigla para 'Bourne-Again SHell', uma brincadeira com o nome do criador do shell original do Unix, Stephen Bourne. O Bash é uma versão moderna e muito mais poderosa, sendo o padrão na maioria das distribuições Linux e funcionando em macOS e Windows.</p>
+        <h3>1.2 O que é um Shell?</h3>
+        <p>Um shell é uma interface que tem duas funções principais:</p>
+        <ul>
+            <li><strong>Interpretador de Comandos:</strong> Você digita um comando, e o shell o traduz em ações que o sistema executa.</li>
+            <li><strong>Linguagem de Programação:</strong> Permite que você combine comandos em arquivos (<strong>scripts</strong>) para automatizar tarefas.</li>
+        </ul>
+        <div class="explanation">
+            <strong>Comandos Internos (Builtins):</strong> Comandos como <code>cd</code>, <code>exec</code> e <code>exit</code> são internos ao shell porque precisam modificar o estado do próprio shell, algo que um programa externo não pode fazer.
+        </div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 1</h4>
+            <div class="question">
+                <p>1. Qual a dupla função de um shell?</p>
+                <ul>
+                    <li><label><input type="radio" name="q1"> Criar gráficos e editar textos.</label></li>
+                    <li><label><input type="radio" name="q1"> Ser um interpretador de comandos e uma linguagem de programação. <span class="correct-answer">Correto!</span></label></li>
+                    <li><label><input type="radio" name="q1"> Gerenciar memória e processos.</label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+
+    <div class="chapter" id="ch2">
+        <h2>Capítulo 2: O Dicionário do Shell</h2>
+        <h3>Metacaracter</h3>
+        <div class="explanation"><strong>Em termos simples:</strong> São caracteres com "superpoderes" que o shell interpreta como ordens especiais. Exemplos: <code>|</code>, <code>&</code>, <code>;</code>, <code><</code>, <code>></code>, <code>*</code>.</div>
+        <h3>Palavra Reservada</h3>
+        <div class="explanation"><strong>Em termos simples:</strong> Palavras que o shell "guarda" para suas regras de programação. Exemplos: <code>if</code>, <code>for</code>, <code>while</code>, <code>case</code>.</div>
+        <h3>Status de Saída (Exit Status)</h3>
+        <div class="explanation"><strong>Em termos simples:</strong> Um número (0-255) que um comando devolve ao terminar. <strong>0</strong> significa sucesso, qualquer outro valor significa erro.</div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 2</h4>
+            <div class="question">
+                <p>1. Um status de saída igual a 0 geralmente indica:</p>
+                <ul>
+                    <li><label><input type="radio" name="q2"> Um erro grave.</label></li>
+                    <li><label><input type="radio" name="q2"> Que o comando foi bem-sucedido. <span class="correct-answer">Correto!</span></label></li>
+                    <li><label><input type="radio" name="q2"> Que o comando precisa de mais argumentos.</label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+
+    <div class="chapter" id="ch3">
+        <h2>Capítulo 3: Sintaxe e Comandos</h2>
+        <h3>3.1 Tipos de Comandos</h3>
+        <p>Comandos podem ser agrupados de várias formas:</p>
+        <ul>
+            <li><strong>Pipelines (<code>|</code>):</strong> A saída de um vira a entrada de outro. Ex: <code>ls -1 | wc -l</code> (conta os arquivos no diretório).</li>
+            <li><strong>Listas (<code>;</code>, <code>&&</code>, <code>||</code>):</strong>
+                <ul>
+                    <li><code>cmd1 ; cmd2</code>: Executa <code>cmd1</code> e depois <code>cmd2</code>, sempre.</li>
+                    <li><code>cmd1 && cmd2</code>: Executa <code>cmd2</code> apenas se <code>cmd1</code> tiver sucesso.</li>
+                    <li><code>cmd1 || cmd2</code>: Executa <code>cmd2</code> apenas se <code>cmd1</code> falhar.</li>
+                </ul>
+            </li>
+            <li><strong>Agrupamento de Comandos:</strong>
+                <ul>
+                    <li><code>( lista )</code>: Executa a lista de comandos em um <strong>subshell</strong> (um ambiente filho). Variáveis criadas aqui morrem com o subshell.</li>
+                    <li><code>{ lista; }</code>: Executa a lista no <strong>shell atual</strong>. Variáveis criadas aqui permanecem. Requer espaço após <code>{</code> e um <code>;</code> antes de <code>}</code>.</li>
+                </ul>
+            </li>
+        </ul>
+        <div class="explanation">
+        <strong>Exemplo de Agrupamento:</strong>
+        <pre><code># Exemplo com ( ) - Subshell
+VAR="global"
+( VAR="local"; echo "Dentro do subshell: $VAR" )
+echo "Fora do subshell: $VAR"
+# Saída:
+# Dentro do subshell: local
+# Fora do subshell: global
+
+# Exemplo com { } - Shell Atual
+VAR="global"
+{ VAR="local"; echo "Dentro do bloco: $VAR"; }
+echo "Fora do bloco: $VAR"
+# Saída:
+# Dentro do bloco: local
+# Fora do bloco: local</code></pre>
+        </div>
+
+        <h3>3.2 Estruturas de Controle (Laços e Condicionais)</h3>
+        <p>Além de <code>if</code>, <code>for</code> e <code>while</code>, temos:</p>
+        <ul>
+            <li><strong><code>until</code></strong>: Executa um bloco de comandos ENQUANTO uma condição for falsa.</li>
+            <li><strong><code>case</code></strong>: Compara um valor com múltiplos padrões, executando o bloco do primeiro padrão que corresponder.</li>
+            <li><strong><code>select</code></strong>: Cria um menu numerado a partir de uma lista de itens e espera que o usuário escolha um.</li>
+        </ul>
+        <div class="explanation">
+        <strong>Exemplo com <code>case</code>:</strong>
+        <pre><code>read -p "Digite sim ou nao: " RESPOSTA
+case $RESPOSTA in
+  sim|s|S)
+    echo "Você disse SIM."
+    ;;
+  nao|n|N)
+    echo "Você disse NÃO."
+    ;;
+  *)
+    echo "Resposta inválida."
+    ;;
+esac</code></pre>
+        </div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 3</h4>
+            <div class="question">
+                <p>1. Para executar o comando <code>limpar_cache</code> apenas se o comando <code>backup</code> falhar, qual a sintaxe correta?</p>
+                <ul>
+                    <li><label><input type="radio" name="q3"> <code>backup && limpar_cache</code></label></li>
+                    <li><label><input type="radio" name="q3"> <code>backup || limpar_cache</code> <span class="correct-answer">Correto!</span></label></li>
+                    <li><label><input type="radio" name="q3"> <code>backup ; limpar_cache</code></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch4">
+        <h2>Capítulo 4: Variáveis e Parâmetros</h2>
+        <h3>4.1 Declaração e Atributos</h3>
+        <p>O comando <code>declare</code> (ou seu sinônimo <code>typeset</code>) permite definir atributos para variáveis.</p>
+        <ul>
+            <li><code>declare -i VAR</code>: A variável será tratada como um inteiro.</li>
+            <li><code>declare -r VAR="valor"</code>: Cria uma variável somente leitura (constante).</li>
+            <li><code>declare -a VAR</code>: Cria um array indexado.</li>
+            <li><code>declare -A VAR</code>: Cria um array associativo.</li>
+            <li><code>declare -x VAR</code>: Marca a variável para ser exportada para sub-processos (o mesmo que <code>export</code>).</li>
+        </ul>
+        <div class="explanation">
+        <pre><code>declare -i contador=10
+contador=contador+5 # Funciona pois é um inteiro
+echo $contador # Saída: 15
+
+declare -r PI=3.14
+PI=3 # Isso resultará em um erro</code></pre>
+        </div>
+        
+        <h3>4.2 Parâmetros Especiais Adicionais</h3>
+        <p>Além dos já vistos, outros parâmetros são úteis:</p>
+        <ul>
+            <li><code>$_</code>: O último argumento do comando anterior.</li>
+            <li><code>$!</code>: O ID do processo do último comando executado em background.</li>
+            <li><code>BASH_VERSION</code>: A versão do Bash.</li>
+            <li><code>FUNCNAME</code>: Um array com a pilha de chamadas de funções.</li>
+            <li><code>PWD</code>: O diretório de trabalho atual.</li>
+            <li><code>OLDPWD</code>: O diretório de trabalho anterior.</li>
+        </ul>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 4</h4>
+            <div class="question">
+                <p>1. Como você criaria uma variável chamada `IDADE` que só aceita operações aritméticas?</p>
+                <ul>
+                    <li><label><input type="radio" name="q4"> <code>readonly IDADE=30</code></label></li>
+                    <li><label><input type="radio" name="q4"> <code>declare -i IDADE=30</code> <span class="correct-answer">Correto!</span></label></li>
+                    <li><label><input type="radio" name="q4"> <code>export IDADE=30</code></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch5">
+        <h2>Capítulo 5: Expansões do Shell</h2>
+        <p>Expansão é o processo que o Bash faz para substituir palavras por seus valores antes de executar o comando.</p>
+        
+        <h3>5.1 Tipos de Expansão</h3>
+        <ol>
+            <li><strong>Expansão de Chaves (Brace Expansion):</strong> Gera strings. Ex: <code>echo img_{a,b,c}.jpg</code> vira <code>img_a.jpg img_b.jpg img_c.jpg</code>. <code>echo {1..5}</code> vira <code>1 2 3 4 5</code>.</li>
+            <li><strong>Expansão de Til (Tilde Expansion):</strong> <code>~</code> vira o diretório home do usuário. <code>~+</code> vira o diretório atual e <code>~-</code> vira o diretório anterior.</li>
+            <li><strong>Expansão de Parâmetros e Variáveis:</strong> Substitui <code>$VAR</code> por seu valor. (Veja o capítulo de Expansões Avançadas para mais).</li>
+            <li><strong>Substituição de Comando (Command Substitution):</strong> <code>$(comando)</code> é substituído pela saída do comando. Ex: <code>hoje=$(date +%F)</code>.</li>
+            <li><strong>Expansão Aritmética:</strong> <code>$((expressão))</code> é substituído pelo resultado da expressão. Ex: <code>echo $((5 * 3))</code>.</li>
+            <li><strong>Substituição de Processo (Process Substitution):</strong> <code><(comando)</code> e <code>>(comando)</code>. Trata a saída de um comando como se fosse um arquivo temporário. É um recurso avançado, mas muito poderoso.</li>
+            <li><strong>Divisão de Palavras (Word Splitting):</strong> O shell usa os caracteres da variável <code>$IFS</code> para quebrar a saída das expansões em palavras.</li>
+            <li><strong>Expansão de Nomes de Arquivos (Filename Expansion / Globbing):</strong> Padrões como <code>*.txt</code> são expandidos para a lista de arquivos correspondentes.</li>
+        </ol>
+        <div class="explanation">
+        <strong>Exemplo com Substituição de Processo:</strong>
+        <p>Compare dois arquivos sem criar arquivos temporários.</p>
+        <pre><code># Compara a saída ordenada de file1.txt e file2.txt
+diff <(sort file1.txt) <(sort file2.txt)</code></pre>
+        </div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 5</h4>
+            <div class="question">
+                <p>1. Que tipo de expansão transforma <code>echo prefixo-{A,B,C}-sufixo</code> em <code>prefixo-A-sufixo prefixo-B-sufixo prefixo-C-sufixo</code>?</p>
+                <ul>
+                    <li><label><input type="radio" name="q5"> Expansão de Til</label></li>
+                    <li><label><input type="radio" name="q5"> Expansão de Chaves <span class="correct-answer">Correto!</span></label></li>
+                    <li><label><input type="radio" name="q5"> Substituição de Comando</label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch6">
+        <h2>Capítulo 6: Redirecionamento</h2>
+        <p>O redirecionamento permite controlar de onde um comando lê seus dados (stdin) e para onde envia sua saída (stdout) e seus erros (stderr).</p>
+        
+        <h3>6.1 Redirecionadores Básicos</h3>
+        <ul>
+            <li><code>> arquivo</code>: Redireciona stdout, sobrescrevendo o arquivo.</li>
+            <li><code>>> arquivo</code>: Redireciona stdout, anexando ao arquivo.</li>
+            <li><code>< arquivo</code>: Redireciona stdin a partir do arquivo.</li>
+            <li><code>2> arquivo</code>: Redireciona stderr para o arquivo.</li>
+            <li><code>&> arquivo</code>: Redireciona stdout e stderr para o mesmo arquivo.</li>
+        </ul>
+        
+        <h3>6.2 Here Documents e Here Strings</h3>
+        <ul>
+            <li><strong>Here Document (<code><<DELIMITADOR</code>):</strong> Permite passar múltiplas linhas de texto como entrada para um comando, diretamente no script.</li>
+            <li><strong>Here String (<code><<< "string"</code>):</strong> Passa uma única string como entrada para um comando.</li>
+        </ul>
+        <div class="explanation">
+        <strong>Exemplo com Here Document e Here String:</strong>
+        <pre><code># Here Document: passa duas linhas para o comando 'cat'
+cat << EOF
+Olá, mundo!
+Esta é a segunda linha.
+EOF
+
+# Here String: passa a string para 'wc -c' (contar caracteres)
+wc -c <<< "Quantos caracteres?"
+# Saída: 19</code></pre>
+        </div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 6</h4>
+            <div class="question">
+                <p>1. O que <code>comando &> log.txt</code> faz?</p>
+                <ul>
+                    <li><label><input type="radio" name="q6"> Redireciona apenas a saída padrão para <code>log.txt</code>.</label></li>
+                    <li><label><input type="radio" name="q6"> Executa o comando em background e redireciona a saída.</label></li>
+                    <li><label><input type="radio" name="q6"> Redireciona tanto a saída padrão quanto a de erro para <code>log.txt</code>. <span class="correct-answer">Correto!</span></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch7">
+        <h2>Capítulo 7: Automação com Funções e Scripts</h2>
+        <p>Funções e scripts são os pilares da automação em Bash.</p>
+        
+        <h3>7.1 Funções</h3>
+        <p>Uma função é um bloco de comandos que pode ser chamado pelo nome. Ela é executada no shell atual, o que significa que pode modificar variáveis e o diretório do seu terminal.</p>
+        <div class="explanation">
+        <pre><code># Define uma função para saudar
+saudar() {
+  echo "Olá, $1!"
+}
+
+# Usa a função
+saudar "Ana" # Saída: Olá, Ana!</code></pre>
+        </div>
+
+        <h3>7.2 Scripts</h3>
+        <p>Um script é um arquivo de texto com comandos, executado em um novo shell. Para torná-lo executável, use <code>chmod +x nome_do_script.sh</code> e execute com <code>./nome_do_script.sh</code>.</p>
+        <p>A primeira linha <code>#!/bin/bash</code> (shebang) é crucial para garantir que o script seja executado com o Bash.</p>
+        
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 7</h4>
+            <div class="question">
+                <p>1. Qual o comando para tornar um script <code>meu_script.sh</code> executável?</p>
+                <ul>
+                    <li><label><input type="radio" name="q7"> <code>run ./meu_script.sh</code></label></li>
+                    <li><label><input type="radio" name="q7"> <code>chmod +x meu_script.sh</code> <span class="correct-answer">Correto!</span></label></li>
+                    <li><label><input type="radio" name="q7"> <code>exec meu_script.sh</code></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch8">
+        <h2>Capítulo 8: A Pilha de Diretórios</h2>
+        <p>A pilha de diretórios é uma lista de diretórios visitados recentemente, que permite navegar entre eles de forma rápida e eficiente.</p>
+        
+        <h3>8.1 Comandos da Pilha</h3>
+        <ul>
+            <li><code>dirs -v</code>: Mostra a pilha de diretórios, com índices numéricos. O topo da pilha (índice 0) é sempre o seu diretório atual.</li>
+            <li><code>pushd /caminho/do/diretorio</code>: Adiciona um diretório ao topo da pilha e muda para ele.</li>
+            <li><code>popd</code>: Remove o diretório do topo da pilha e volta para o novo topo.</li>
+            <li><code>pushd +N</code>: Rotaciona a pilha, trazendo o diretório de índice N para o topo (e muda para ele).</li>
+        </ul>
+        
+        <div class="explanation">
+            <strong>Exemplo de uso da pilha:</strong>
+            <pre><code># Você está em /home/user
+dirs -v # 0 /home/user
+
+# Entra em /etc
+pushd /etc
+dirs -v
+# 0 /etc
+# 1 /home/user
+
+# Entra em /var/log
+pushd /var/log
+dirs -v
+# 0 /var/log
+# 1 /etc
+# 2 /home/user
+
+# Volta para /etc
+popd
+dirs -v
+# 0 /etc
+# 1 /home/user
+
+# Rotaciona para voltar para /home/user (índice 1)
+pushd +1
+dirs -v
+# 0 /home/user
+# 1 /etc</code></pre>
+        </div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 8</h4>
+            <div class="question">
+                <p>1. Qual comando adiciona um diretório à pilha e muda o diretório atual para ele?</p>
+                <ul>
+                    <li><label><input type="radio" name="q8"> <code>dirs</code></label></li>
+                    <li><label><input type="radio" name="q8"> <code>popd</code></label></li>
+                    <li><label><input type="radio" name="q8"> <code>pushd</code> <span class="correct-answer">Correto!</span></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch9">
+        <h2>Capítulo 9: Arrays (Listas)</h2>
+        <p>Um array é uma variável que pode armazenar múltiplos valores. Existem dois tipos: indexados (com números) e associativos (com chaves de texto).</p>
+        
+        <h3>9.1 Arrays Indexados</h3>
+        <p>Os índices são números, começando em 0.</p>
+        <div class="explanation">
+        <pre><code># Criando um array
+FRUTAS=("Maçã" "Banana" "Laranja")
+
+# Acessando elementos
+echo "Primeira fruta: ${FRUTAS[0]}" # Saída: Maçã
+
+# Adicionando um elemento
+FRUTAS[3]="Uva"
+
+# Vendo todos os elementos
+echo "Todas as frutas: ${FRUTAS[@]}"
+
+# Vendo o número de elementos
+echo "Temos ${#FRUTAS[@]} frutas."
+
+# Percorrendo o array
+for fruta in "${FRUTAS[@]}"; do
+  echo "Processando: $fruta"
+done</code></pre>
+        </div>
+        
+        <h3>9.2 Arrays Associativos</h3>
+        <p>Os índices (chaves) são strings. Você precisa declará-los com <code>declare -A</code>.</p>
+        <div class="explanation">
+        <pre><code># Declarando um array associativo
+declare -A PRECOS
+
+# Adicionando elementos
+PRECOS["maçã"]=2.50
+PRECOS["banana"]=1.80
+
+# Acessando um elemento
+echo "O preço da maçã é ${PRECOS["maçã"]}"
+
+# Percorrendo chaves e valores
+for item in "${!PRECOS[@]}"; do
+  echo "O preço de $item é ${PRECOS[$item]}"
+done</code></pre>
+        </div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 9</h4>
+            <div class="question">
+                <p>1. Se <code>meu_array=("A" "B" "C")</code>, como você acessaria o valor "A"?</p>
+                <ul>
+                    <li><label><input type="radio" name="q9"> <code>${meu_array[1]}</code></label></li>
+                    <li><label><input type="radio" name="q9"> <code>${meu_array[A]}</code></label></li>
+                    <li><label><input type="radio" name="q9"> <code>${meu_array[0]}</code> <span class="correct-answer">Correto!</span></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+            <div class="question">
+                <p>2. Qual o comando para declarar um array associativo chamado `CAPITAIS`?</p>
+                <ul>
+                    <li><label><input type="radio" name="q10"> <code>declare -a CAPITAIS</code></label></li>
+                    <li><label><input type="radio" name="q10"> <code>declare -A CAPITAIS</code> <span class="correct-answer">Correto!</span></label></li>
+                    <li><label><input type="radio" name="q10"> <code>CAPITAIS={...}</code></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch10">
+        <h2>Capítulo 10: Atalhos e Edição</h2>
+        <p>O Bash usa a biblioteca <strong>Readline</strong> para edição de linha de comando. Conhecer atalhos economiza muito tempo.</p>
+        
+        <h3>Atalhos Essenciais (Padrão Emacs)</h3>
+        <ul>
+            <li><code>Ctrl + A</code>: Mover cursor para o início da linha.</li>
+            <li><code>Ctrl + E</code>: Mover cursor para o fim da linha.</li>
+            <li><code>Ctrl + K</code>: Apagar do cursor até o fim da linha.</li>
+            <li><code>Ctrl + U</code>: Apagar do cursor até o início da linha.</li>
+            <li><code>Ctrl + W</code>: Apagar a palavra anterior.</li>
+            <li><code>Ctrl + L</code>: Limpar a tela.</li>
+            <li><code>Ctrl + R</code>: Buscar no histórico de comandos.</li>
+            <li><code>!!</code>: Repetir o último comando.</li>
+            <li><code>!$</code>: Usar o último argumento do comando anterior.</li>
+        </ul>
+        <div class="explanation">
+            <strong>Exemplo com <code>!$</code>:</strong>
+            <pre><code>mkdir -p /diretorio/muito/longo/e/complicado
+# Agora, para entrar nesse diretório:
+cd !$</code></pre>
+        </div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 10</h4>
+            <div class="question">
+                <p>1. Qual atalho apaga a linha inteira do cursor para trás?</p>
+                <ul>
+                    <li><label><input type="radio" name="q11"> <code>Ctrl + K</code></label></li>
+                    <li><label><input type="radio" name="q11"> <code>Ctrl + E</code></label></li>
+                    <li><label><input type="radio" name="q11"> <code>Ctrl + U</code> <span class="correct-answer">Correto!</span></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch11">
+        <h2>Capítulo 11: Gerenciando Processos</h2>
+        <p>Gerencie processos em primeiro plano (foreground) e segundo plano (background).</p>
+
+        <h3>11.1 Comandos de Gerenciamento</h3>
+        <ul>
+            <li><code>comando &</code>: Executa o comando em background.</li>
+            <li><code>Ctrl + Z</code>: Suspende (pausa) o comando em foreground.</li>
+            <li><code>jobs</code>: Lista os jobs (comandos suspensos ou em background).</li>
+            <li><code>bg %N</code>: Continua o job N em background.</li>
+            <li><code>fg %N</code>: Traz o job N para o foreground.</li>
+            <li><code>kill %N</code>: Mata o job N.</li>
+            <li><code>kill PID</code>: Mata o processo com o ID especificado.</li>
+        </ul>
+        <div class="explanation">
+        <strong>Exemplo de fluxo de trabalho:</strong>
+        <pre><code># Inicia um processo que demora
+sleep 100
+
+# Percebe que precisa do terminal de volta, pressiona Ctrl+Z
+[1]+  Stopped                 sleep 100
+
+# Lista os jobs
+jobs
+# [1]+  Stopped                 sleep 100
+
+# Continua o processo em background
+bg %1
+
+# O processo agora está rodando e o terminal está livre</code></pre>
+        </div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 11</h4>
+            <div class="question">
+                <p>1. Qual o atalho para suspender um processo em execução no terminal?</p>
+                <ul>
+                    <li><label><input type="radio" name="q12"> <code>Ctrl + C</code></label></li>
+                    <li><label><input type="radio" name="q12"> <code>Ctrl + Z</code> <span class="correct-answer">Correto!</span></label></li>
+                    <li><label><input type="radio" name="q12"> <code>Ctrl + D</code></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch12">
+        <h2>Capítulo 12: Autocompletar Programável</h2>
+        <p>O Bash permite que você defina suas próprias regras de autocompletar (pressionando a tecla TAB) para qualquer comando.</p>
+        
+        <h3>12.1 Comandos Principais</h3>
+        <ul>
+            <li><code>complete -F _funcao_complete comando</code>: Associa uma função (<code>_funcao_complete</code>) para gerar as opções de autocompletar para o <code>comando</code>.</li>
+            <li><code>compgen -W "lista de palavras" -- $palavra_atual</code>: Dentro da função, gera sugestões a partir de uma lista de palavras.</li>
+        </ul>
+        <p>Dentro da função de autocompletar, o Bash define variáveis especiais:</p>
+        <ul>
+            <li><code>COMP_WORDS</code>: Um array com as palavras da linha de comando atual.</li>
+            <li><code>COMP_CWORD</code>: O índice da palavra atual (onde o cursor está).</li>
+            <li><code>COMPREPLY</code>: Um array onde sua função deve colocar as sugestões de autocompletar.</li>
+        </ul>
+        <div class="explanation">
+        <strong>Exemplo Simples: Autocompletar para um comando "saudar"</strong>
+        <p>Este exemplo fará com que o comando <code>saudar</code> sugira "ana", "bruno" e "carla" quando você pressionar TAB.</p>
+        <pre><code># Função que gera as sugestões
+_saudar_complete() {
+  local palavra_atual=${COMP_WORDS[COMP_CWORD]}
+  local opcoes="ana bruno carla"
+  COMPREPLY=( $(compgen -W "${opcoes}" -- ${palavra_atual}) )
+}
+
+# Associa a função ao comando 'saudar'
+complete -F _saudar_complete saudar</code></pre>
+        <p>Depois de executar esse código no seu terminal, digite <code>saudar a</code> e pressione TAB. Ele deverá autocompletar para "ana".</p>
+        </div>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 12</h4>
+            <div class="question">
+                <p>1. Em uma função de autocompletar, qual variável de array você deve preencher com as sugestões?</p>
+                <ul>
+                    <li><label><input type="radio" name="q13"> <code>COMP_WORDS</code></label></li>
+                    <li><label><input type="radio" name="q13"> <code>COMPREPLY</code> <span class="correct-answer">Correto!</span></label></li>
+                    <li><label><input type="radio" name="q13"> <code>SUGESTOES</code></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+    
+    <div class="chapter" id="ch13">
+        <h2>Capítulo 13: Outros Recursos</h2>
+        <h3>13.1 Shell Restrito</h3>
+        <p>Se o Bash for iniciado como <code>rbash</code> ou com a opção <code>-r</code>, ele entra em modo restrito. Nesse modo, várias ações são proibidas, como:</p>
+        <ul>
+            <li>Mudar de diretório com <code>cd</code>.</li>
+            <li>Alterar variáveis de ambiente importantes como <code>PATH</code>, <code>SHELL</code> ou <code>BASH_ENV</code>.</li>
+            <li>Especificar nomes de comando contendo barras (<code>/</code>).</li>
+            <li>Redirecionar a saída com <code>></code>, <code>>></code>, etc.</li>
+        </ul>
+        <p>É uma forma de criar um ambiente de usuário mais controlado e limitado.</p>
+        
+        <h3>13.2 Modo POSIX</h3>
+        <p>O POSIX é um conjunto de padrões para manter a compatibilidade entre sistemas operacionais do tipo Unix. O Bash, por padrão, tem alguns comportamentos que são extensões ou desvios desse padrão.</p>
+        <p>Ao iniciar o Bash com <code>--posix</code> ou executar <code>set -o posix</code>, você força o shell a se comportar de maneira mais estrita de acordo com o padrão POSIX. Isso é útil para escrever scripts que precisam rodar em diferentes tipos de shells, não apenas no Bash.</p>
+        <div class="quiz">
+            <h4>Teste seus conhecimentos - Capítulo 13</h4>
+            <div class="question">
+                <p>1. Qual o principal objetivo de se usar o modo POSIX no Bash?</p>
+                <ul>
+                    <li><label><input type="radio" name="q14"> Deixar o shell mais rápido.</label></li>
+                    <li><label><input type="radio" name="q14"> Habilitar mais recursos e cores.</label></li>
+                    <li><label><input type="radio" name="q14"> Garantir maior compatibilidade e portabilidade de scripts com outros shells do padrão Unix. <span class="correct-answer">Correto!</span></label></li>
+                </ul>
+                <button onclick="revealAnswer(this)">Revelar Resposta</button>
+            </div>
+        </div>
+        <div class="back-to-top"><a href="#indice">Voltar ao Índice ↑</a></div>
+    </div>
+
+</div>
+
+</body>
+</html>
